@@ -8,26 +8,64 @@
 <style>
 body{
     margin:0;
-    color:white;
     font-family:Arial, sans-serif;
+    color:white;
+    overflow:hidden;
 
-    /* 🌍 Realistic Earth at night background */
-    background: url('https://upload.wikimedia.org/wikipedia/commons/9/9a/The_Earth_at_night.jpg') 
-    no-repeat center center fixed;
-    background-size: cover;
-    position: relative;
+    /* Base “time running out” atmosphere */
+    background: radial-gradient(circle at center, #1a0000 0%, #000 70%);
 }
 
-/* Dark overlay for readability */
+/* ===== RUNNING OUT OF TIME BACKGROUND EFFECT ===== */
+
+/* rotating “clock pulse” layer */
 body::before{
+    content:"";
+    position:fixed;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background: conic-gradient(
+        from 0deg,
+        rgba(255,0,0,0.15),
+        rgba(0,0,0,0.8),
+        rgba(255,0,0,0.1),
+        rgba(0,0,0,0.9),
+        rgba(255,0,0,0.2)
+    );
+    animation: spin 6s linear infinite;
+    z-index:-2;
+    opacity:0.8;
+    filter: blur(40px);
+}
+
+/* flickering urgency overlay */
+body::after{
     content:"";
     position:fixed;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,0.55);
+    background:
+        radial-gradient(circle at 50% 50%, rgba(255,0,0,0.15), transparent 60%),
+        repeating-radial-gradient(circle at 50% 50%, rgba(255,0,0,0.05) 0 2px, transparent 2px 6px);
+    animation: pulse 1.5s infinite alternate;
     z-index:-1;
+    opacity:0.6;
+}
+
+/* spinning motion */
+@keyframes spin{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+}
+
+/* heartbeat / ticking effect */
+@keyframes pulse{
+    0%{ opacity:0.3; filter:contrast(1); }
+    100%{ opacity:0.7; filter:contrast(1.4); }
 }
 
 /* Top-center container */
@@ -44,7 +82,7 @@ body::before{
 h1{
     margin:0 0 10px 0;
     font-size:1.5rem;
-    text-shadow:0 0 10px rgba(255,255,255,0.4);
+    text-shadow:0 0 10px rgba(255,0,0,0.4);
 }
 
 #countdown{
@@ -55,12 +93,12 @@ h1{
 }
 
 .time-box{
-    background:rgba(34,34,34,0.9);
+    background:rgba(20,0,0,0.85);
     padding:12px;
     border-radius:10px;
     min-width:90px;
-    box-shadow:0 0 10px rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 0 15px rgba(255,0,0,0.25);
+    border:1px solid rgba(255,0,0,0.2);
 }
 
 .number{
@@ -72,30 +110,31 @@ h1{
 .label{
     font-size:0.8rem;
     margin-top:5px;
-    color:#ccc;
+    color:#ffaaaa;
     text-transform:uppercase;
 }
 
+/* Button below timer */
 .button-container{
     margin-top:15px;
 }
 
 .nav-btn{
-    background:#ff0000;
+    background:#b00000;
     color:white;
     border:none;
     padding:12px 24px;
     font-size:18px;
     border-radius:8px;
     cursor:pointer;
-    box-shadow:0 0 10px red;
+    box-shadow:0 0 15px red;
     transition:all 0.3s ease;
 }
 
 .nav-btn:hover{
-    background:#cc0000;
+    background:#ff0000;
     transform:scale(1.05);
-    box-shadow:0 0 20px red;
+    box-shadow:0 0 25px red;
 }
 
 /* Scientific Calculator */
@@ -104,11 +143,11 @@ h1{
     width:380px;
     margin-left:auto;
     margin-right:auto;
-    background:rgba(34,34,34,0.95);
+    background:rgba(20,0,0,0.9);
     padding:15px;
     border-radius:12px;
-    box-shadow:0 0 15px rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 0 20px rgba(255,0,0,0.2);
+    border:1px solid rgba(255,0,0,0.25);
 }
 
 #calcDisplay{
@@ -121,7 +160,7 @@ h1{
     border:none;
     border-radius:8px;
     background:#000;
-    color:#00ff00;
+    color:#ff4444;
     box-sizing:border-box;
 }
 
@@ -135,7 +174,7 @@ h1{
     height:50px;
     border:none;
     border-radius:8px;
-    background:#333;
+    background:#2a0000;
     color:white;
     font-size:16px;
     cursor:pointer;
@@ -143,7 +182,7 @@ h1{
 }
 
 .calc-buttons button:hover{
-    background:#555;
+    background:#5a0000;
     transform:scale(1.05);
 }
 
@@ -156,7 +195,7 @@ footer{
     width:100%;
     text-align:center;
     font-size:10px;
-    color:rgba(255,255,255,0.75);
+    color:rgba(255,150,150,0.7);
     letter-spacing:1px;
     pointer-events:none;
 }
@@ -170,6 +209,7 @@ footer{
     <h1>Sub-Project Completion Countdown for KKB-CDD</h1>
 
     <div id="countdown">
+
         <div class="time-box">
             <div class="number" id="days">0</div>
             <div class="label">Days</div>
@@ -189,6 +229,7 @@ footer{
             <div class="number" id="seconds">0</div>
             <div class="label">Seconds</div>
         </div>
+
     </div>
 
     <div class="button-container">
@@ -199,9 +240,11 @@ footer{
     </div>
 
     <div class="calculator">
+
         <input type="text" id="calcDisplay" readonly>
 
         <div class="calc-buttons">
+
             <button onclick="appendCalc('(')">(</button>
             <button onclick="appendCalc(')')">)</button>
             <button onclick="appendCalc('**')">xʸ</button>
@@ -236,7 +279,9 @@ footer{
             <button onclick="appendCalc('.')">.</button>
             <button onclick="appendCalc('Math.PI')">π</button>
             <button onclick="backspaceCalc()">⌫</button>
+
         </div>
+
     </div>
 
 </div>
@@ -250,38 +295,37 @@ function updateCountdown(){
 
     if(distance <= 0){
         document.getElementById("countdown").innerHTML =
-        "<h2>🎉 The countdown has ended!</h2>";
+        "<h2>Time has run out.</h2>";
         return;
     }
 
-    document.getElementById("days").textContent = Math.floor(distance/(1000*60*60*24));
-    document.getElementById("hours").textContent = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-    document.getElementById("minutes").textContent = Math.floor((distance%(1000*60*60))/(1000*60));
-    document.getElementById("seconds").textContent = Math.floor((distance%(1000*60))/1000);
+    const days = Math.floor(distance/(1000*60*60*24));
+    const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+    const seconds = Math.floor((distance%(1000*60))/1000);
+
+    document.getElementById("days").textContent = days;
+    document.getElementById("hours").textContent = hours;
+    document.getElementById("minutes").textContent = minutes;
+    document.getElementById("seconds").textContent = seconds;
 }
 
 updateCountdown();
 setInterval(updateCountdown,1000);
 
-function appendCalc(value){
-    document.getElementById("calcDisplay").value += value;
-}
-
-function clearCalc(){
-    document.getElementById("calcDisplay").value = "";
-}
-
+/* Calculator */
+function appendCalc(v){ document.getElementById("calcDisplay").value += v; }
+function clearCalc(){ document.getElementById("calcDisplay").value = ""; }
 function backspaceCalc(){
-    let display = document.getElementById("calcDisplay");
-    display.value = display.value.slice(0,-1);
+    let d=document.getElementById("calcDisplay");
+    d.value=d.value.slice(0,-1);
 }
-
 function calculateResult(){
     try{
         document.getElementById("calcDisplay").value =
         eval(document.getElementById("calcDisplay").value);
-    }catch{
-        document.getElementById("calcDisplay").value = "Error";
+    }catch(e){
+        document.getElementById("calcDisplay").value="Error";
     }
 }
 </script>
