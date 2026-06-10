@@ -3,59 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KKB-CDD Countdown Dashboard</title>
+<title>KKB-CDD Dashboard</title>
 <style>
 body{
-margin:0;font-family:Arial,sans-serif;color:#fff;overflow-x:hidden;
+margin:0;
+font-family:Arial,sans-serif;
+color:white;
 background:radial-gradient(circle at center,#1a0000 0%,#000 70%);
+overflow-x:hidden;
 }
-body:before{
-content:"";position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+body::before{
+content:"";
+position:fixed;
+top:-50%;left:-50%;
+width:200%;height:200%;
 background:conic-gradient(from 0deg,rgba(255,0,0,.15),rgba(0,0,0,.8),rgba(255,0,0,.1),rgba(0,0,0,.9));
-animation:spin 6s linear infinite;filter:blur(40px);z-index:-2;
-}
-body:after{
-content:"";position:fixed;inset:0;
-background:radial-gradient(circle,rgba(255,0,0,.15),transparent 60%);
-animation:pulse 1.5s infinite alternate;z-index:-1;
+animation:spin 6s linear infinite;
+filter:blur(40px);
+z-index:-2;
 }
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-@keyframes pulse{from{opacity:.3}to{opacity:.8}}
 
-.container{max-width:1000px;margin:auto;padding:20px;text-align:center}
+.container{max-width:1200px;margin:auto;padding:20px;text-align:center}
 #countdown{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.time-box{background:rgba(20,0,0,.85);padding:12px;border-radius:10px;min-width:100px}
+.time-box{background:#200;padding:15px;border-radius:10px;min-width:100px}
 .number{font-size:2rem;font-weight:bold}
-.label{font-size:.8rem;color:#ffaaaa}
-.nav-btn,button{
-background:#b00000;color:#fff;border:none;border-radius:8px;padding:12px;cursor:pointer
+
+.nav-btn{
+background:#b00000;color:#fff;border:none;padding:12px 20px;
+border-radius:8px;cursor:pointer;margin-top:15px;
 }
+
+.tools-container{
+display:flex;
+gap:30px;
+justify-content:center;
+align-items:flex-start;
+margin-top:30px;
+flex-wrap:wrap;
+}
+
 .panel{
-margin-top:25px;background:rgba(20,0,0,.9);
-padding:15px;border-radius:12px;border:1px solid rgba(255,0,0,.25)
+width:500px;
+background:rgba(20,0,0,.9);
+padding:15px;
+border-radius:12px;
+border:1px solid rgba(255,0,0,.3);
 }
-#calcDisplay,#unitInput,#unitResult,select{
-width:100%;height:45px;margin-bottom:10px;box-sizing:border-box;
-background:#000;color:#ff6666;border:none;border-radius:8px;padding:8px;
+
+#calcDisplay,input,select{
+width:100%;
+height:45px;
+margin-bottom:10px;
+box-sizing:border-box;
+background:#000;
+color:#ff6666;
+border:none;
+border-radius:8px;
+padding:8px;
 }
+
 .calc-buttons{
-display:grid;grid-template-columns:repeat(4,1fr);gap:8px
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
 }
+
+button{
+background:#b00000;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+padding:10px;
+}
+
 .calc-buttons button{height:50px}
-.converter-grid{display:grid;gap:10px}
-footer{text-align:center;padding:20px;font-size:12px;color:#ff9999}
-@media(max-width:600px){.calc-buttons{grid-template-columns:repeat(4,1fr)}}
+
+footer{
+text-align:center;
+padding:15px;
+font-size:12px;
+color:#ff9999;
+}
+
+@media(max-width:1100px){
+.panel{width:95%}
+.tools-container{flex-direction:column;align-items:center}
+}
 </style>
 </head>
 <body>
+
 <div class="container">
-<h1>SP Completion Countdown for KKB‑CDD</h1>
+
+<h1>SP Completion Countdown for KKB-CDD</h1>
 
 <div id="countdown">
-<div class="time-box"><div class="number" id="days">0</div><div class="label">Days</div></div>
-<div class="time-box"><div class="number" id="hours">0</div><div class="label">Hours</div></div>
-<div class="time-box"><div class="number" id="minutes">0</div><div class="label">Minutes</div></div>
-<div class="time-box"><div class="number" id="seconds">0</div><div class="label">Seconds</div></div>
+<div class="time-box"><div class="number" id="days">0</div><div>Days</div></div>
+<div class="time-box"><div class="number" id="hours">0</div><div>Hours</div></div>
+<div class="time-box"><div class="number" id="minutes">0</div><div>Minutes</div></div>
+<div class="time-box"><div class="number" id="seconds">0</div><div>Seconds</div></div>
 </div>
 
 <p>
@@ -64,43 +112,71 @@ View Individual SP Countdown
 </button>
 </p>
 
+<div class="tools-container">
+
 <div class="panel">
 <h2>Scientific Calculator</h2>
 <input id="calcDisplay" readonly>
-<div class="calc-buttons">
-<button onclick="add('(')">(</button><button onclick="add(')')">)</button><button onclick="add('**')">xʸ</button><button onclick="clr()">C</button>
-<button onclick="add('Math.sin(')">sin</button><button onclick="add('Math.cos(')">cos</button><button onclick="add('Math.tan(')">tan</button><button onclick="add('/')">÷</button>
-<button onclick="add('Math.log10(')">log</button><button onclick="add('Math.log(')">ln</button><button onclick="add('Math.sqrt(')">√</button><button onclick="add('*')">×</button>
-<button onclick="add('7')">7</button><button onclick="add('8')">8</button><button onclick="add('9')">9</button><button onclick="add('-')">−</button>
-<button onclick="add('4')">4</button><button onclick="add('5')">5</button><button onclick="add('6')">6</button><button onclick="add('+')">+</button>
-<button onclick="add('1')">1</button><button onclick="add('2')">2</button><button onclick="add('3')">3</button><button onclick="eq()">=</button>
-<button onclick="add('0')">0</button><button onclick="add('.')">.</button><button onclick="add('Math.PI')">π</button><button onclick="bk()">⌫</button>
-</div>
-</div>
 
-<div style="height:40px"></div>
+<div class="calc-buttons">
+<button onclick="add('(')">(</button>
+<button onclick="add(')')">)</button>
+<button onclick="add('**')">xʸ</button>
+<button onclick="clr()">C</button>
+
+<button onclick="add('Math.sin(')">sin</button>
+<button onclick="add('Math.cos(')">cos</button>
+<button onclick="add('Math.tan(')">tan</button>
+<button onclick="add('/')">÷</button>
+
+<button onclick="add('Math.log10(')">log</button>
+<button onclick="add('Math.sqrt(')">√</button>
+<button onclick="add('*')">×</button>
+<button onclick="add('-')">−</button>
+
+<button onclick="add('7')">7</button>
+<button onclick="add('8')">8</button>
+<button onclick="add('9')">9</button>
+<button onclick="add('+')">+</button>
+
+<button onclick="add('4')">4</button>
+<button onclick="add('5')">5</button>
+<button onclick="add('6')">6</button>
+<button onclick="eq()">=</button>
+
+<button onclick="add('1')">1</button>
+<button onclick="add('2')">2</button>
+<button onclick="add('3')">3</button>
+<button onclick="bk()">⌫</button>
+
+<button onclick="add('0')">0</button>
+<button onclick="add('.')">.</button>
+<button onclick="add('Math.PI')">π</button>
+<button onclick="add('Math.E')">e</button>
+</div>
+</div>
 
 <div class="panel">
 <h2>Universal Unit Converter</h2>
+
 <select id="category" onchange="populateUnits()">
 <option value="length">Length</option>
-<option value="area">Area</option>
-<option value="volume">Volume</option>
 <option value="mass">Mass</option>
 <option value="temperature">Temperature</option>
 <option value="speed">Speed</option>
 <option value="time">Time</option>
-<option value="pressure">Pressure</option>
-<option value="energy">Energy</option>
-<option value="power">Power</option>
-<option value="storage">Storage</option>
-<option value="angle">Angle</option>
 </select>
-<input type="number" id="unitInput" placeholder="Enter value">
+
+<input type="number" id="unitInput" placeholder="Enter Value">
 <select id="fromUnit"></select>
 <select id="toUnit"></select>
+
 <button onclick="convertUnit()">Convert</button>
+
 <input id="unitResult" readonly placeholder="Result">
+
+</div>
+
 </div>
 </div>
 
@@ -108,61 +184,58 @@ View Individual SP Countdown
 
 <script>
 const targetDate=new Date("October 31, 2026 00:00:00").getTime();
+
 setInterval(()=>{
-const d=targetDate-Date.now();
+let d=targetDate-Date.now();
 if(d<0)return;
 days.textContent=Math.floor(d/86400000);
-hours.textContent=Math.floor(d%86400000/3600000);
-minutes.textContent=Math.floor(d%3600000/60000);
-seconds.textContent=Math.floor(d%60000/1000);
+hours.textContent=Math.floor((d%86400000)/3600000);
+minutes.textContent=Math.floor((d%3600000)/60000);
+seconds.textContent=Math.floor((d%60000)/1000);
 },1000);
 
-function add(v){calcDisplay.value+=v}
-function clr(){calcDisplay.value=''}
-function bk(){calcDisplay.value=calcDisplay.value.slice(0,-1)}
-function eq(){try{calcDisplay.value=eval(calcDisplay.value)}catch(e){calcDisplay.value='Error'}}
+function add(v){calcDisplay.value+=v;}
+function clr(){calcDisplay.value='';}
+function bk(){calcDisplay.value=calcDisplay.value.slice(0,-1);}
+function eq(){try{calcDisplay.value=eval(calcDisplay.value);}catch(e){calcDisplay.value='Error';}}
 
-const unitData={
-length:{mm:.001,cm:.01,m:1,km:1000,in:.0254,ft:.3048,yd:.9144,mi:1609.344,nmi:1852},
-area:{"mm²":.000001,"cm²":.0001,"m²":1,"km²":1000000,"ft²":.092903,acre:4046.856,hectare:10000},
-volume:{mL:.001,L:1,m3:1000,tsp:.00492892,tbsp:.0147868,cup:.236588,pint:.473176,quart:.946353,gallon:3.78541},
-mass:{mg:.000001,g:.001,kg:1,ton:1000,oz:.0283495,lb:.453592,stone:6.35029},
-speed:{"m/s":1,"km/h":.277778,mph:.44704,knot:.514444},
-time:{ms:.001,sec:1,min:60,hr:3600,day:86400,week:604800,month:2629800,year:31557600},
-pressure:{Pa:1,kPa:1000,MPa:1000000,bar:100000,psi:6894.76,atm:101325},
-energy:{J:1,kJ:1000,cal:4.184,kcal:4184,Wh:3600,kWh:3600000},
-power:{W:1,kW:1000,MW:1000000,hp:745.7},
-storage:{bit:.125,byte:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776},
-angle:{degree:1,radian:57.2958},
+const units={
+length:{mm:0.001,cm:0.01,m:1,km:1000,ft:0.3048,mi:1609.344},
+mass:{g:0.001,kg:1,lb:0.453592,ton:1000},
+speed:{"m/s":1,"km/h":0.277778,mph:0.44704},
+time:{sec:1,min:60,hr:3600,day:86400},
 temperature:{C:1,F:1,K:1}
 };
 
 function populateUnits(){
-let c=category.value;
-fromUnit.innerHTML=''; toUnit.innerHTML='';
-Object.keys(unitData[c]).forEach(u=>{
+const cat=category.value;
+fromUnit.innerHTML='';
+toUnit.innerHTML='';
+Object.keys(units[cat]).forEach(u=>{
 fromUnit.add(new Option(u,u));
 toUnit.add(new Option(u,u));
 });
 }
-function convertUnit(){
-let c=category.value,v=parseFloat(unitInput.value);
-if(isNaN(v)) return unitResult.value='Enter a number';
-let f=fromUnit.value,t=toUnit.value;
 
-if(c==='temperature'){
-let r=v;
-if(f==='C'&&t==='F')r=v*9/5+32;
-else if(f==='F'&&t==='C')r=(v-32)*5/9;
-else if(f==='C'&&t==='K')r=v+273.15;
-else if(f==='K'&&t==='C')r=v-273.15;
-else if(f==='F'&&t==='K')r=(v-32)*5/9+273.15;
-else if(f==='K'&&t==='F')r=(v-273.15)*9/5+32;
-unitResult.value=r; return;
+function convertUnit(){
+let cat=category.value;
+let value=parseFloat(unitInput.value);
+if(isNaN(value)) return;
+
+if(cat==='temperature'){
+let f=fromUnit.value,t=toUnit.value,r=value;
+if(f==='C'&&t==='F')r=value*9/5+32;
+else if(f==='F'&&t==='C')r=(value-32)*5/9;
+else if(f==='C'&&t==='K')r=value+273.15;
+else if(f==='K'&&t==='C')r=value-273.15;
+unitResult.value=r;
+return;
 }
-const base=v*unitData[c][f];
-unitResult.value=(base/unitData[c][t]).toLocaleString(undefined,{maximumFractionDigits:10});
+
+let base=value*units[cat][fromUnit.value];
+unitResult.value=base/units[cat][toUnit.value];
 }
+
 populateUnits();
 </script>
 </body>
