@@ -254,24 +254,36 @@ View Individual SP Countdown
 </div>
 </div>
 
-<div class="panel">
-<h2>Universal Unit Converter</h2>
+<div style="height:40px;"></div>
 
-<select id="category" onchange="populateUnits()">
-<option value="length">Length</option>
-<option value="mass">Mass</option>
-<option value="temperature">Temperature</option>
-<option value="speed">Speed</option>
-<option value="time">Time</option>
-</select>
+<div class="converter">
 
-<input type="number" id="unitInput" placeholder="Enter Value">
-<select id="fromUnit"></select>
-<select id="toUnit"></select>
+    <h3>Universal Unit Converter</h3>
 
-<button onclick="convertUnit()">Convert</button>
+    <select id="category" onchange="populateUnits()">
+        <option value="length">Length</option>
+        <option value="area">Area</option>
+        <option value="volume">Volume</option>
+        <option value="mass">Mass / Weight</option>
+        <option value="temperature">Temperature</option>
+        <option value="speed">Speed</option>
+        <option value="time">Time</option>
+        <option value="pressure">Pressure</option>
+        <option value="energy">Energy</option>
+        <option value="power">Power</option>
+        <option value="storage">Data Storage</option>
+        <option value="angle">Angle</option>
+    </select>
 
-<input id="unitResult" readonly placeholder="Result">
+    <input type="number" id="unitInput" placeholder="Enter Value">
+
+    <select id="fromUnit"></select>
+
+    <select id="toUnit"></select>
+
+    <button onclick="convertUnit()">Convert</button>
+
+    <input type="text" id="unitResult" readonly placeholder="Result">
 
 </div>
 
@@ -297,42 +309,183 @@ function clr(){calcDisplay.value='';}
 function bk(){calcDisplay.value=calcDisplay.value.slice(0,-1);}
 function eq(){try{calcDisplay.value=eval(calcDisplay.value);}catch(e){calcDisplay.value='Error';}}
 
-const units={
-length:{mm:0.001,cm:0.01,m:1,km:1000,ft:0.3048,mi:1609.344},
-mass:{g:0.001,kg:1,lb:0.453592,ton:1000},
-speed:{"m/s":1,"km/h":0.277778,mph:0.44704},
-time:{sec:1,min:60,hr:3600,day:86400},
-temperature:{C:1,F:1,K:1}
+const unitData = {
+
+length:{
+mm:0.001,
+cm:0.01,
+m:1,
+km:1000,
+in:0.0254,
+ft:0.3048,
+yd:0.9144,
+mi:1609.344,
+nmi:1852
+},
+
+area:{
+"mm²":0.000001,
+"cm²":0.0001,
+"m²":1,
+"km²":1000000,
+"ft²":0.092903,
+"yd²":0.836127,
+acre:4046.856,
+hectare:10000
+},
+
+volume:{
+mL:0.001,
+L:1,
+m3:1000,
+tsp:0.00492892,
+tbsp:0.0147868,
+cup:0.236588,
+pint:0.473176,
+quart:0.946353,
+gallon:3.78541
+},
+
+mass:{
+mg:0.000001,
+g:0.001,
+kg:1,
+ton:1000,
+oz:0.0283495,
+lb:0.453592,
+stone:6.35029
+},
+
+speed:{
+"m/s":1,
+"km/h":0.277778,
+mph:0.44704,
+knot:0.514444
+},
+
+time:{
+ms:0.001,
+sec:1,
+min:60,
+hr:3600,
+day:86400,
+week:604800,
+month:2629800,
+year:31557600
+},
+
+pressure:{
+Pa:1,
+kPa:1000,
+MPa:1000000,
+bar:100000,
+psi:6894.76,
+atm:101325
+},
+
+energy:{
+J:1,
+kJ:1000,
+cal:4.184,
+kcal:4184,
+Wh:3600,
+kWh:3600000
+},
+
+power:{
+W:1,
+kW:1000,
+MW:1000000,
+hp:745.7
+},
+
+storage:{
+bit:0.125,
+byte:1,
+KB:1024,
+MB:1048576,
+GB:1073741824,
+TB:1099511627776
+},
+
+angle:{
+degree:1,
+radian:57.2958
+}
+
 };
 
 function populateUnits(){
-const cat=category.value;
-fromUnit.innerHTML='';
-toUnit.innerHTML='';
-Object.keys(units[cat]).forEach(u=>{
-fromUnit.add(new Option(u,u));
-toUnit.add(new Option(u,u));
+
+const category=document.getElementById("category").value;
+const from=document.getElementById("fromUnit");
+const to=document.getElementById("toUnit");
+
+from.innerHTML="";
+to.innerHTML="";
+
+Object.keys(unitData[category]).forEach(unit=>{
+
+let opt1=document.createElement("option");
+opt1.value=unit;
+opt1.textContent=unit;
+from.appendChild(opt1);
+
+let opt2=document.createElement("option");
+opt2.value=unit;
+opt2.textContent=unit;
+to.appendChild(opt2);
+
 });
 }
 
 function convertUnit(){
-let cat=category.value;
-let value=parseFloat(unitInput.value);
-if(isNaN(value)) return;
 
-if(cat==='temperature'){
-let f=fromUnit.value,t=toUnit.value,r=value;
-if(f==='C'&&t==='F')r=value*9/5+32;
-else if(f==='F'&&t==='C')r=(value-32)*5/9;
-else if(f==='C'&&t==='K')r=value+273.15;
-else if(f==='K'&&t==='C')r=value-273.15;
-unitResult.value=r;
+const category=document.getElementById("category").value;
+const value=parseFloat(document.getElementById("unitInput").value);
+
+if(isNaN(value)){
+document.getElementById("unitResult").value="Enter a number";
 return;
 }
 
-let base=value*units[cat][fromUnit.value];
-unitResult.value=base/units[cat][toUnit.value];
+if(category==="temperature"){
+
+const from=document.getElementById("fromUnit").value;
+const to=document.getElementById("toUnit").value;
+
+let result=value;
+
+if(from==="C"&&to==="F") result=(value*9/5)+32;
+else if(from==="F"&&to==="C") result=(value-32)*5/9;
+else if(from==="C"&&to==="K") result=value+273.15;
+else if(from==="K"&&to==="C") result=value-273.15;
+else if(from==="F"&&to==="K") result=(value-32)*5/9+273.15;
+else if(from==="K"&&to==="F") result=(value-273.15)*9/5+32;
+
+document.getElementById("unitResult").value=result;
+return;
 }
+
+const from=document.getElementById("fromUnit").value;
+const to=document.getElementById("toUnit").value;
+
+const base=value*unitData[category][from];
+const result=base/unitData[category][to];
+
+document.getElementById("unitResult").value=result.toLocaleString(
+undefined,
+{
+maximumFractionDigits:10
+}
+);
+}
+
+unitData.temperature={
+C:1,
+F:1,
+K:1
+};
 
 populateUnits();
 </script>
