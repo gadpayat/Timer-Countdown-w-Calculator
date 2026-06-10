@@ -3,107 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sub-Project Completion Countdown for KKB-CDD</title>
+<title>KKB-CDD Countdown - 3D Starry Sky</title>
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
+
 body{
-    margin:0;
-    background:#111;
+    font-family:Arial,sans-serif;
     color:white;
-    font-family:Arial, sans-serif;
+    overflow:hidden;
+    background:#000;
 }
 
-/* Top-center container */
 .container{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
     text-align:center;
-    z-index:9999;
-    padding:10px;
+    z-index:10;
 }
 
 h1{
-    margin:0 0 10px 0;
-    font-size:1.5rem;
-    text-shadow:0 0 10px rgba(255,255,255,0.4);
+    margin-bottom:10px;
+    text-shadow:0 0 20px rgba(255,255,255,.7);
 }
 
 #countdown{
     display:flex;
-    justify-content:center;
     gap:10px;
-    flex-wrap:nowrap;
+    justify-content:center;
 }
 
 .time-box{
-    background:rgba(34,34,34,0.9);
-    padding:12px;
-    border-radius:10px;
     min-width:90px;
-    box-shadow:0 0 10px rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.1);
+    padding:12px;
+    border-radius:12px;
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.15);
 }
 
-.number{
-    font-size:2rem;
-    font-weight:bold;
-    line-height:1;
-}
+.number{font-size:2rem;font-weight:bold}
+.label{font-size:.8rem;color:#ddd}
 
-.label{
-    font-size:0.8rem;
-    margin-top:5px;
-    color:#ccc;
-    text-transform:uppercase;
-}
-
-/* Button below timer */
-.button-container{
-    margin-top:15px;
-}
+.button-container{margin-top:15px}
 
 .nav-btn{
-    background:#ff0000;
+    background:#d40000;
     color:white;
     border:none;
-    padding:12px 24px;
-    font-size:18px;
+    padding:12px 20px;
     border-radius:8px;
     cursor:pointer;
-    box-shadow:0 0 10px red;
-    transition:all 0.3s ease;
 }
 
-.nav-btn:hover{
-    background:#cc0000;
-    transform:scale(1.05);
-    box-shadow:0 0 20px red;
-}
-
-/* Scientific Calculator */
 .calculator{
-    margin:25px auto 0;
-    width:320px;
-    background:rgba(25,25,25,0.95);
-    border-radius:12px;
+    position:fixed;
+    top:220px;
+    left:50%;
+    transform:translateX(-50%);
+    width:340px;
+    z-index:10;
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(15px);
     padding:15px;
-    box-shadow:0 0 20px rgba(255,255,255,0.2);
+    border-radius:15px;
+    border:1px solid rgba(255,255,255,.15);
 }
 
-.calculator input{
+#display{
     width:100%;
     height:60px;
     font-size:22px;
     text-align:right;
     padding:10px;
     margin-bottom:10px;
-    border:none;
-    border-radius:8px;
-    background:#222;
-    color:white;
-    box-sizing:border-box;
 }
 
 .calc-buttons{
@@ -113,216 +88,205 @@ h1{
 }
 
 .calc-buttons button{
-    height:50px;
-    border:none;
-    border-radius:6px;
-    background:#333;
-    color:white;
-    font-size:16px;
+    height:48px;
     cursor:pointer;
-    transition:0.2s;
 }
 
-.calc-buttons button:hover{
-    background:#555;
-}
-
-.equal-btn{
-    background:#00aa00 !important;
-}
-
-.clear-btn{
-    background:#cc0000 !important;
-}
-
-/* Footer Signature */
 footer{
     position:fixed;
     bottom:5px;
     left:50%;
     transform:translateX(-50%);
-    width:100%;
-    text-align:center;
-    font-size:10px;
-    color:rgba(255,255,255,0.75);
-    letter-spacing:1px;
-    pointer-events:none;
+    z-index:10;
+    font-size:11px;
 }
 
-@media(max-width:900px){
-
-    .calculator{
-        position:relative;
-        top:250px;
-        right:auto;
-        margin:0 auto;
-        width:90%;
-    }
-
-    .container{
-        position:relative;
-        left:auto;
-        transform:none;
-        width:100%;
-    }
+canvas{
+    position:fixed !important;
+    inset:0;
+    z-index:-1;
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
+<h1>Sub-Project Completion Countdown for KKB-CDD</h1>
 
-    <h1>Sub-Project Completion Countdown for KKB-CDD</h1>
-
-    <div id="countdown">
-
-        <div class="time-box">
-            <div class="number" id="days">0</div>
-            <div class="label">Days</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="hours">0</div>
-            <div class="label">Hours</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="minutes">0</div>
-            <div class="label">Minutes</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="seconds">0</div>
-            <div class="label">Seconds</div>
-        </div>
-
-    </div>
-
-    <div class="button-container">
-        <button class="nav-btn"
-        onclick="window.location.href='https://gadpayat.github.io/Status-Countdown/';">
-        👉 Click HERE to view the Individual SP Countdown
-        </button>
-    </div>
-
+<div id="countdown">
+<div class="time-box"><div class="number" id="days">0</div><div class="label">Days</div></div>
+<div class="time-box"><div class="number" id="hours">0</div><div class="label">Hours</div></div>
+<div class="time-box"><div class="number" id="minutes">0</div><div class="label">Minutes</div></div>
+<div class="time-box"><div class="number" id="seconds">0</div><div class="label">Seconds</div></div>
 </div>
 
-<!-- Scientific Calculator -->
+<div class="button-container">
+<button class="nav-btn" onclick="window.location.href='https://gadpayat.github.io/Status-Countdown/'">
+👉 Click HERE to view the Individual SP Countdown
+</button>
+</div>
+</div>
+
 <div class="calculator">
+<input id="display" readonly>
+<div class="calc-buttons">
+<button onclick="appendValue('(')">(</button>
+<button onclick="appendValue(')')">)</button>
+<button onclick="appendValue('Math.PI')">π</button>
+<button onclick="appendValue('**2')">x²</button>
+<button onclick="clearDisplay()">C</button>
 
-    <input type="text" id="display" readonly>
+<button onclick="appendValue('Math.sin(')">sin</button>
+<button onclick="appendValue('Math.cos(')">cos</button>
+<button onclick="appendValue('Math.tan(')">tan</button>
+<button onclick="appendValue('Math.log10(')">log</button>
+<button onclick="appendValue('Math.log(')">ln</button>
 
-    <div class="calc-buttons">
+<button onclick="appendValue('7')">7</button>
+<button onclick="appendValue('8')">8</button>
+<button onclick="appendValue('9')">9</button>
+<button onclick="appendValue('/')">÷</button>
+<button onclick="appendValue('Math.sqrt(')">√</button>
 
-        <button onclick="appendValue('(')">(</button>
-        <button onclick="appendValue(')')">)</button>
-        <button onclick="appendValue('Math.PI')">π</button>
-        <button onclick="appendValue('**2')">x²</button>
-        <button class="clear-btn" onclick="clearDisplay()">C</button>
+<button onclick="appendValue('4')">4</button>
+<button onclick="appendValue('5')">5</button>
+<button onclick="appendValue('6')">6</button>
+<button onclick="appendValue('*')">×</button>
+<button onclick="appendValue('%')">%</button>
 
-        <button onclick="appendValue('Math.sin(')">sin</button>
-        <button onclick="appendValue('Math.cos(')">cos</button>
-        <button onclick="appendValue('Math.tan(')">tan</button>
-        <button onclick="appendValue('Math.log10(')">log</button>
-        <button onclick="appendValue('Math.log(')">ln</button>
+<button onclick="appendValue('1')">1</button>
+<button onclick="appendValue('2')">2</button>
+<button onclick="appendValue('3')">3</button>
+<button onclick="appendValue('-')">−</button>
+<button onclick="appendValue('.')">.</button>
 
-        <button onclick="appendValue('Math.sqrt(')">√</button>
-        <button onclick="appendValue('7')">7</button>
-        <button onclick="appendValue('8')">8</button>
-        <button onclick="appendValue('9')">9</button>
-        <button onclick="appendValue('/')">÷</button>
-
-        <button onclick="appendValue('4')">4</button>
-        <button onclick="appendValue('5')">5</button>
-        <button onclick="appendValue('6')">6</button>
-        <button onclick="appendValue('*')">×</button>
-        <button onclick="appendValue('%')">%</button>
-
-        <button onclick="appendValue('1')">1</button>
-        <button onclick="appendValue('2')">2</button>
-        <button onclick="appendValue('3')">3</button>
-        <button onclick="appendValue('-')">−</button>
-        <button onclick="appendValue('.')">.</button>
-
-        <button onclick="appendValue('0')">0</button>
-        <button onclick="backspace()">⌫</button>
-        <button onclick="appendValue('+')">+</button>
-        <button class="equal-btn" onclick="calculate()">=</button>
-
-    </div>
-
+<button onclick="appendValue('0')">0</button>
+<button onclick="backspace()">⌫</button>
+<button onclick="appendValue('+')">+</button>
+<button onclick="calculate()">=</button>
 </div>
+</div>
+
+<footer>© 2026 Ghilous. All Rights Reserved.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
-const targetDate = new Date("October 31, 2026 00:00:00").getTime();
+const targetDate=new Date("October 31, 2026 00:00:00").getTime();
 
 function updateCountdown(){
+const now=new Date().getTime();
+const distance=targetDate-now;
+if(distance<0)return;
 
-    const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    if(distance <= 0){
-        document.getElementById("countdown").innerHTML =
-        "<h2>🎉 The countdown has ended!</h2>";
-        return;
-    }
-
-    const days = Math.floor(distance / (1000*60*60*24));
-
-    const hours = Math.floor(
-        (distance % (1000*60*60*24)) /
-        (1000*60*60)
-    );
-
-    const minutes = Math.floor(
-        (distance % (1000*60*60)) /
-        (1000*60)
-    );
-
-    const seconds = Math.floor(
-        (distance % (1000*60)) /
-        1000
-    );
-
-    document.getElementById("days").textContent = days;
-    document.getElementById("hours").textContent = hours;
-    document.getElementById("minutes").textContent = minutes;
-    document.getElementById("seconds").textContent = seconds;
+document.getElementById("days").textContent=Math.floor(distance/(1000*60*60*24));
+document.getElementById("hours").textContent=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+document.getElementById("minutes").textContent=Math.floor((distance%(1000*60*60))/(1000*60));
+document.getElementById("seconds").textContent=Math.floor((distance%(1000*60))/1000);
 }
-
-updateCountdown();
 setInterval(updateCountdown,1000);
+updateCountdown();
 
-/* Calculator Functions */
+function appendValue(v){display.value+=v;}
+function clearDisplay(){display.value='';}
+function backspace(){display.value=display.value.slice(0,-1);}
+function calculate(){try{display.value=eval(display.value);}catch(e){display.value='Error';}}
 
-function appendValue(value){
-    document.getElementById("display").value += value;
+// THREE JS SKY
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,5000);
+camera.position.z=600;
+
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setSize(innerWidth,innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// stars
+const starGeo=new THREE.BufferGeometry();
+const starCount=15000;
+const pos=[];
+for(let i=0;i<starCount;i++){
+pos.push((Math.random()-0.5)*4000,(Math.random()-0.5)*4000,(Math.random()-0.5)*4000);
+}
+starGeo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+const starMat=new THREE.PointsMaterial({color:0xffffff,size:1.8});
+const stars=new THREE.Points(starGeo,starMat);
+scene.add(stars);
+
+// moon
+const moon=new THREE.Mesh(
+new THREE.SphereGeometry(70,64,64),
+new THREE.MeshBasicMaterial({color:0xffffdd})
+);
+moon.position.set(500,250,-800);
+scene.add(moon);
+
+const glow=new THREE.Mesh(
+new THREE.SphereGeometry(95,64,64),
+new THREE.MeshBasicMaterial({color:0xffffee,transparent:true,opacity:0.15})
+);
+glow.position.copy(moon.position);
+scene.add(glow);
+
+// nebulae
+for(let i=0;i<35;i++){
+const n=new THREE.Mesh(
+new THREE.SphereGeometry(120+Math.random()*120,32,32),
+new THREE.MeshBasicMaterial({
+color:[0x223366,0x442266,0x334488][Math.floor(Math.random()*3)],
+transparent:true,
+opacity:0.05
+})
+);
+n.position.set((Math.random()-0.5)*2500,(Math.random()-0.5)*1200,-1200-Math.random()*1500);
+scene.add(n);
 }
 
-function clearDisplay(){
-    document.getElementById("display").value = "";
+const shooting=[];
+
+function createMeteor(){
+const g=new THREE.BufferGeometry();
+g.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,-120,20,0],3));
+const m=new THREE.LineBasicMaterial({color:0xffffff});
+const line=new THREE.Line(g,m);
+line.position.set(-1500,300+Math.random()*500,-500);
+scene.add(line);
+shooting.push({mesh:line,speed:18+Math.random()*15});
 }
 
-function backspace(){
-    let display = document.getElementById("display");
-    display.value = display.value.slice(0,-1);
+setInterval(createMeteor,2000);
+
+function animate(){
+requestAnimationFrame(animate);
+
+stars.rotation.y+=0.00012;
+stars.rotation.x+=0.00004;
+
+starMat.opacity=0.75+Math.sin(Date.now()*0.002)*0.25;
+
+camera.position.x=Math.sin(Date.now()*0.00015)*120;
+camera.position.y=Math.cos(Date.now()*0.00012)*60;
+camera.lookAt(scene.position);
+
+for(let i=shooting.length-1;i>=0;i--){
+shooting[i].mesh.position.x+=shooting[i].speed;
+shooting[i].mesh.position.y-=shooting[i].speed*0.35;
+
+if(shooting[i].mesh.position.x>1600){
+scene.remove(shooting[i].mesh);
+shooting.splice(i,1);
+}
 }
 
-function calculate(){
-    try{
-        document.getElementById("display").value =
-        eval(document.getElementById("display").value);
-    }
-    catch(error){
-        document.getElementById("display").value = "Error";
-    }
+renderer.render(scene,camera);
 }
+animate();
+
+addEventListener('resize',()=>{
+camera.aspect=innerWidth/innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(innerWidth,innerHeight);
+});
 </script>
-
-<footer>
-© 2026 Ghilous. All Rights Reserved.
-</footer>
-
 </body>
 </html>
