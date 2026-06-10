@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KKB-CDD Dashboard</title>
+
 <style>
 body{
 margin:0;
@@ -12,6 +13,7 @@ color:white;
 background:radial-gradient(circle at center,#1a0000 0%,#000 70%);
 overflow-x:hidden;
 }
+
 body::before{
 content:"";
 position:fixed;
@@ -22,17 +24,21 @@ animation:spin 6s linear infinite;
 filter:blur(40px);
 z-index:-2;
 }
+
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
 .container{max-width:1200px;margin:auto;padding:20px;text-align:center}
+
 #countdown{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+
 .time-box{background:#200;padding:15px;border-radius:10px;min-width:100px}
+
 .number{font-size:2rem;font-weight:bold}
 
+/* GOLD BUTTON */
 .nav-btn{
 position:relative;
 overflow:hidden;
-
 background:linear-gradient(
 135deg,
 #fff7b2 0%,
@@ -44,7 +50,6 @@ background:linear-gradient(
 #ffe066 90%,
 #fff7b2 100%
 );
-
 color:#000;
 font-weight:bold;
 font-size:16px;
@@ -53,13 +58,11 @@ border:none;
 border-radius:10px;
 cursor:pointer;
 margin-top:15px;
-
 box-shadow:
 0 0 10px rgba(255,215,0,.8),
 0 0 20px rgba(255,215,0,.6),
 0 0 35px rgba(255,215,0,.4),
 inset 0 2px 3px rgba(255,255,255,.8);
-
 animation:goldGlow 2s ease-in-out infinite;
 transition:.3s;
 }
@@ -79,14 +82,7 @@ top:-50%;
 left:-150%;
 width:60%;
 height:200%;
-
-background:linear-gradient(
-90deg,
-transparent,
-rgba(255,255,255,.95),
-transparent
-);
-
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);
 transform:rotate(25deg);
 animation:goldShine 2.5s linear infinite;
 }
@@ -104,50 +100,30 @@ pointer-events:none;
 animation:sparkle 1.8s infinite alternate;
 }
 
-@keyframes goldShine{
-0%{
-left:-150%;
-}
-100%{
-left:180%;
-}
-}
+@keyframes goldShine{0%{left:-150%}100%{left:180%}}
+@keyframes goldGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+@keyframes sparkle{0%{opacity:.3}100%{opacity:1}}
 
-@keyframes goldGlow{
-0%,100%{
-filter:brightness(1);
-}
-50%{
-filter:brightness(1.25);
-}
-}
-
-@keyframes sparkle{
-0%{
-opacity:.3;
-}
-100%{
-opacity:1;
-}
-}
-
+/* SIDE-BY-SIDE FIX */
 .tools-container{
 display:flex;
-gap:30px;
-justify-content:center;
+justify-content:space-between;
 align-items:flex-start;
+gap:30px;
 margin-top:30px;
-flex-wrap:wrap;
+flex-wrap:nowrap;
 }
 
 .panel{
-width:500px;
+flex:1;
+min-width:0;
 background:rgba(20,0,0,.9);
 padding:15px;
 border-radius:12px;
 border:1px solid rgba(255,0,0,.3);
 }
 
+/* INPUTS */
 #calcDisplay,input,select{
 width:100%;
 height:45px;
@@ -185,11 +161,17 @@ color:#ff9999;
 }
 
 @media(max-width:1100px){
-.panel{width:95%}
-.tools-container{flex-direction:column;align-items:center}
+.tools-container{
+flex-direction:column;
+align-items:center;
+}
+.panel{
+width:95%;
+}
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -212,6 +194,7 @@ View Individual SP Countdown
 
 <div class="tools-container">
 
+<!-- CALCULATOR -->
 <div class="panel">
 <h2>Scientific Calculator</h2>
 <input id="calcDisplay" readonly>
@@ -254,37 +237,33 @@ View Individual SP Countdown
 </div>
 </div>
 
-<div style="height:40px;"></div>
+<!-- CONVERTER -->
+<div class="panel">
+<h2>Universal Unit Converter</h2>
 
-<div class="converter">
+<select id="category" onchange="populateUnits()">
+<option value="length">Length</option>
+<option value="area">Area</option>
+<option value="volume">Volume</option>
+<option value="mass">Mass / Weight</option>
+<option value="temperature">Temperature</option>
+<option value="speed">Speed</option>
+<option value="time">Time</option>
+<option value="pressure">Pressure</option>
+<option value="energy">Energy</option>
+<option value="power">Power</option>
+<option value="storage">Data Storage</option>
+<option value="angle">Angle</option>
+</select>
 
-    <h3>Universal Unit Converter</h3>
+<input type="number" id="unitInput" placeholder="Enter Value">
 
-    <select id="category" onchange="populateUnits()">
-        <option value="length">Length</option>
-        <option value="area">Area</option>
-        <option value="volume">Volume</option>
-        <option value="mass">Mass / Weight</option>
-        <option value="temperature">Temperature</option>
-        <option value="speed">Speed</option>
-        <option value="time">Time</option>
-        <option value="pressure">Pressure</option>
-        <option value="energy">Energy</option>
-        <option value="power">Power</option>
-        <option value="storage">Data Storage</option>
-        <option value="angle">Angle</option>
-    </select>
+<select id="fromUnit"></select>
+<select id="toUnit"></select>
 
-    <input type="number" id="unitInput" placeholder="Enter Value">
+<button onclick="convertUnit()">Convert</button>
 
-    <select id="fromUnit"></select>
-
-    <select id="toUnit"></select>
-
-    <button onclick="convertUnit()">Convert</button>
-
-    <input type="text" id="unitResult" readonly placeholder="Result">
-
+<input type="text" id="unitResult" readonly placeholder="Result">
 </div>
 
 </div>
@@ -310,113 +289,20 @@ function bk(){calcDisplay.value=calcDisplay.value.slice(0,-1);}
 function eq(){try{calcDisplay.value=eval(calcDisplay.value);}catch(e){calcDisplay.value='Error';}}
 
 const unitData = {
-
-length:{
-mm:0.001,
-cm:0.01,
-m:1,
-km:1000,
-in:0.0254,
-ft:0.3048,
-yd:0.9144,
-mi:1609.344,
-nmi:1852
-},
-
-area:{
-"mm²":0.000001,
-"cm²":0.0001,
-"m²":1,
-"km²":1000000,
-"ft²":0.092903,
-"yd²":0.836127,
-acre:4046.856,
-hectare:10000
-},
-
-volume:{
-mL:0.001,
-L:1,
-m3:1000,
-tsp:0.00492892,
-tbsp:0.0147868,
-cup:0.236588,
-pint:0.473176,
-quart:0.946353,
-gallon:3.78541
-},
-
-mass:{
-mg:0.000001,
-g:0.001,
-kg:1,
-ton:1000,
-oz:0.0283495,
-lb:0.453592,
-stone:6.35029
-},
-
-speed:{
-"m/s":1,
-"km/h":0.277778,
-mph:0.44704,
-knot:0.514444
-},
-
-time:{
-ms:0.001,
-sec:1,
-min:60,
-hr:3600,
-day:86400,
-week:604800,
-month:2629800,
-year:31557600
-},
-
-pressure:{
-Pa:1,
-kPa:1000,
-MPa:1000000,
-bar:100000,
-psi:6894.76,
-atm:101325
-},
-
-energy:{
-J:1,
-kJ:1000,
-cal:4.184,
-kcal:4184,
-Wh:3600,
-kWh:3600000
-},
-
-power:{
-W:1,
-kW:1000,
-MW:1000000,
-hp:745.7
-},
-
-storage:{
-bit:0.125,
-byte:1,
-KB:1024,
-MB:1048576,
-GB:1073741824,
-TB:1099511627776
-},
-
-angle:{
-degree:1,
-radian:57.2958
-}
-
+length:{mm:0.001,cm:0.01,m:1,km:1000,in:0.0254,ft:0.3048,yd:0.9144,mi:1609.344,nmi:1852},
+area:{"mm²":0.000001,"cm²":0.0001,"m²":1,"km²":1000000,"ft²":0.092903,"yd²":0.836127,acre:4046.856,hectare:10000},
+volume:{mL:0.001,L:1,m3:1000,tsp:0.00492892,tbsp:0.0147868,cup:0.236588,pint:0.473176,quart:0.946353,gallon:3.78541},
+mass:{mg:0.000001,g:0.001,kg:1,ton:1000,oz:0.0283495,lb:0.453592,stone:6.35029},
+speed:{"m/s":1,"km/h":0.277778,mph:0.44704,knot:0.514444},
+time:{ms:0.001,sec:1,min:60,hr:3600,day:86400,week:604800,month:2629800,year:31557600},
+pressure:{Pa:1,kPa:1000,MPa:1000000,bar:100000,psi:6894.76,atm:101325},
+energy:{J:1,kJ:1000,cal:4.184,kcal:4184,Wh:3600,kWh:3600000},
+power:{W:1,kW:1000,MW:1000000,hp:745.7},
+storage:{bit:0.125,byte:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776},
+angle:{degree:1,radian:57.2958}
 };
 
 function populateUnits(){
-
 const category=document.getElementById("category").value;
 const from=document.getElementById("fromUnit");
 const to=document.getElementById("toUnit");
@@ -425,7 +311,6 @@ from.innerHTML="";
 to.innerHTML="";
 
 Object.keys(unitData[category]).forEach(unit=>{
-
 let opt1=document.createElement("option");
 opt1.value=unit;
 opt1.textContent=unit;
@@ -435,12 +320,10 @@ let opt2=document.createElement("option");
 opt2.value=unit;
 opt2.textContent=unit;
 to.appendChild(opt2);
-
 });
 }
 
 function convertUnit(){
-
 const category=document.getElementById("category").value;
 const value=parseFloat(document.getElementById("unitInput").value);
 
@@ -450,7 +333,6 @@ return;
 }
 
 if(category==="temperature"){
-
 const from=document.getElementById("fromUnit").value;
 const to=document.getElementById("toUnit").value;
 
@@ -473,21 +355,15 @@ const to=document.getElementById("toUnit").value;
 const base=value*unitData[category][from];
 const result=base/unitData[category][to];
 
-document.getElementById("unitResult").value=result.toLocaleString(
-undefined,
-{
+document.getElementById("unitResult").value=result.toLocaleString(undefined,{
 maximumFractionDigits:10
-}
-);
+});
 }
 
-unitData.temperature={
-C:1,
-F:1,
-K:1
-};
+unitData.temperature={C:1,F:1,K:1};
 
 populateUnits();
 </script>
+
 </body>
 </html>
