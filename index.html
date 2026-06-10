@@ -8,25 +8,34 @@
 <style>
 body{
     margin:0;
+    overflow:hidden;
     color:white;
     font-family:Arial, sans-serif;
-
-    /* 🌍 NEW CINEMATIC BACKGROUND */
-    background: url("/mnt/data/a_wide_cinematic_ui_webpage_screenshot_scene_a_d.png") no-repeat center center fixed;
-    background-size: cover;
-    overflow-x:hidden;
+    background:#000;
 }
 
-/* 🌑 DARK OVERLAY FOR READABILITY */
-body::before{
-    content:"";
+/* THREE.JS BACKGROUND CANVAS */
+#bg{
     position:fixed;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,0.55);
+    z-index:-2;
+}
+
+/* soft space glow overlay */
+.space-glow{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
     z-index:-1;
+    background: radial-gradient(circle at center,
+        rgba(0,20,40,0.3),
+        rgba(0,0,0,0.9)
+    );
 }
 
 /* Top-center container */
@@ -54,12 +63,13 @@ h1{
 }
 
 .time-box{
-    background:rgba(34,34,34,0.9);
+    background:rgba(34,34,34,0.75);
     padding:12px;
     border-radius:10px;
     min-width:90px;
     box-shadow:0 0 10px rgba(255,255,255,0.15);
     border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(4px);
 }
 
 .number{
@@ -75,7 +85,7 @@ h1{
     text-transform:uppercase;
 }
 
-/* Button below timer */
+/* Button */
 .button-container{
     margin-top:15px;
 }
@@ -98,13 +108,13 @@ h1{
     box-shadow:0 0 20px red;
 }
 
-/* Scientific Calculator */
+/* Calculator */
 .calculator{
     margin-top:30px;
     width:380px;
     margin-left:auto;
     margin-right:auto;
-    background:rgba(34,34,34,0.95);
+    background:rgba(34,34,34,0.9);
     padding:15px;
     border-radius:12px;
     box-shadow:0 0 15px rgba(255,255,255,0.15);
@@ -121,7 +131,7 @@ h1{
     border:none;
     border-radius:8px;
     background:#000;
-    color:#00ff00;
+    color:#00ff88;
     box-sizing:border-box;
 }
 
@@ -147,7 +157,7 @@ h1{
     transform:scale(1.05);
 }
 
-/* Footer Signature */
+/* Footer */
 footer{
     position:fixed;
     bottom:5px;
@@ -164,6 +174,10 @@ footer{
 </head>
 
 <body>
+
+<!-- 3D BACKGROUND -->
+<canvas id="bg"></canvas>
+<div class="space-glow"></div>
 
 <div class="container">
 
@@ -205,7 +219,6 @@ footer{
         <input type="text" id="calcDisplay" readonly>
 
         <div class="calc-buttons">
-
             <button onclick="appendCalc('(')">(</button>
             <button onclick="appendCalc(')')">)</button>
             <button onclick="appendCalc('**')">xʸ</button>
@@ -240,14 +253,20 @@ footer{
             <button onclick="appendCalc('.')">.</button>
             <button onclick="appendCalc('Math.PI')">π</button>
             <button onclick="backspaceCalc()">⌫</button>
-
         </div>
 
     </div>
 
 </div>
 
+<footer>
+    © 2026 Ghilous. All Rights Reserved.
+</footer>
+
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+
 <script>
+/* ================= COUNTDOWN ================= */
 const targetDate = new Date("October 31, 2026 00:00:00").getTime();
 
 function updateCountdown(){
@@ -260,49 +279,101 @@ function updateCountdown(){
         return;
     }
 
-    document.getElementById("days").textContent =
-        Math.floor(distance/(1000*60*60*24));
-
-    document.getElementById("hours").textContent =
-        Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-
-    document.getElementById("minutes").textContent =
-        Math.floor((distance%(1000*60*60))/(1000*60));
-
-    document.getElementById("seconds").textContent =
-        Math.floor((distance%(1000*60))/1000);
+    document.getElementById("days").textContent = Math.floor(distance/(1000*60*60*24));
+    document.getElementById("hours").textContent = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    document.getElementById("minutes").textContent = Math.floor((distance%(1000*60*60))/(1000*60));
+    document.getElementById("seconds").textContent = Math.floor((distance%(1000*60))/1000);
 }
-
 setInterval(updateCountdown,1000);
 updateCountdown();
 
-/* Calculator */
-function appendCalc(value){
-    document.getElementById("calcDisplay").value += value;
-}
-
-function clearCalc(){
-    document.getElementById("calcDisplay").value = "";
-}
-
+/* ================= CALCULATOR ================= */
+function appendCalc(v){ document.getElementById("calcDisplay").value += v; }
+function clearCalc(){ document.getElementById("calcDisplay").value = ""; }
 function backspaceCalc(){
-    let display = document.getElementById("calcDisplay");
-    display.value = display.value.slice(0,-1);
+    let d = document.getElementById("calcDisplay");
+    d.value = d.value.slice(0,-1);
 }
-
 function calculateResult(){
     try{
         document.getElementById("calcDisplay").value =
         eval(document.getElementById("calcDisplay").value);
-    } catch(e){
+    }catch(e){
         document.getElementById("calcDisplay").value = "Error";
     }
 }
-</script>
 
-<footer>
-    © 2026 Ghilous. All Rights Reserved.
-</footer>
+/* ================= 3D EARTH BACKGROUND ================= */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+const renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById("bg"),
+    antialias:true
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+/* Earth */
+const geometry = new THREE.SphereGeometry(2, 64, 64);
+
+const loader = new THREE.TextureLoader();
+const earthTexture = loader.load("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");
+const earthLights = loader.load("https://threejs.org/examples/textures/planets/earth_lights_2048.png");
+
+const material = new THREE.MeshStandardMaterial({
+    map: earthTexture,
+    emissiveMap: earthLights,
+    emissive: new THREE.Color(0xffffff),
+    emissiveIntensity: 1
+});
+
+const earth = new THREE.Mesh(geometry, material);
+scene.add(earth);
+
+/* Lights */
+const light = new THREE.PointLight(0xffffff, 1.2);
+light.position.set(5,3,5);
+scene.add(light);
+
+scene.add(new THREE.AmbientLight(0x222222));
+
+camera.position.z = 6;
+
+/* Stars */
+function addStars(){
+    const starGeo = new THREE.BufferGeometry();
+    const starCount = 6000;
+    const positions = [];
+
+    for(let i=0;i<starCount;i++){
+        positions.push((Math.random()-0.5)*200);
+        positions.push((Math.random()-0.5)*200);
+        positions.push((Math.random()-0.5)*200);
+    }
+
+    starGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+
+    const starMat = new THREE.PointsMaterial({color:0xffffff, size:0.5});
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+}
+addStars();
+
+/* Animation */
+function animate(){
+    requestAnimationFrame(animate);
+    earth.rotation.y += 0.002;
+    renderer.render(scene, camera);
+}
+animate();
+
+/* Resize */
+window.addEventListener("resize", ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
 
 </body>
 </html>
