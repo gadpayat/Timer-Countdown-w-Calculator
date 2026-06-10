@@ -6,28 +6,44 @@
 <title>Sub-Project Completion Countdown for KKB-CDD</title>
 
 <style>
-body{
+*{
     margin:0;
-    background:#111;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    overflow:hidden;
+    background:#000;
     color:white;
     font-family:Arial, sans-serif;
 }
 
-/* Top-center container */
+/* 3D Background */
+#space-bg{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-10;
+}
+
+/* Main Container */
 .container{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
     text-align:center;
-    z-index:9999;
+    z-index:1000;
     padding:10px;
 }
 
 h1{
-    margin:0 0 10px 0;
-    font-size:1.5rem;
-    text-shadow:0 0 10px rgba(255,255,255,0.4);
+    margin-bottom:10px;
+    font-size:1.8rem;
+    text-shadow:0 0 20px rgba(255,255,255,.8);
 }
 
 #countdown{
@@ -38,75 +54,72 @@ h1{
 }
 
 .time-box{
-    background:rgba(34,34,34,0.9);
-    padding:12px;
-    border-radius:10px;
-    min-width:90px;
-    box-shadow:0 0 10px rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(30,30,30,.85);
+    padding:15px;
+    border-radius:12px;
+    min-width:110px;
+    border:1px solid rgba(255,255,255,.2);
+    box-shadow:0 0 20px rgba(255,255,255,.15);
+    backdrop-filter:blur(5px);
 }
 
 .number{
-    font-size:2rem;
+    font-size:2.2rem;
     font-weight:bold;
-    line-height:1;
 }
 
 .label{
-    font-size:0.8rem;
-    margin-top:5px;
     color:#ccc;
+    margin-top:5px;
+    font-size:.85rem;
     text-transform:uppercase;
 }
 
-/* Button below timer */
 .button-container{
-    margin-top:15px;
+    margin-top:20px;
 }
 
 .nav-btn{
     background:#ff0000;
-    color:white;
+    color:#fff;
     border:none;
-    padding:12px 24px;
+    padding:14px 28px;
+    border-radius:10px;
     font-size:18px;
-    border-radius:8px;
     cursor:pointer;
-    box-shadow:0 0 10px red;
-    transition:all 0.3s ease;
+    box-shadow:0 0 20px red;
+    transition:.3s;
 }
 
 .nav-btn:hover{
-    background:#cc0000;
     transform:scale(1.05);
-    box-shadow:0 0 20px red;
+    box-shadow:0 0 35px red;
 }
 
-/* Scientific Calculator */
+/* Calculator */
 .calculator{
-    margin-top:30px; /* Double-spaced below button */
-    width:380px;
+    margin-top:40px;
+    width:400px;
+    background:rgba(20,20,20,.9);
+    border-radius:15px;
+    padding:15px;
     margin-left:auto;
     margin-right:auto;
-    background:rgba(34,34,34,0.95);
-    padding:15px;
-    border-radius:12px;
-    box-shadow:0 0 15px rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter:blur(8px);
 }
 
 #calcDisplay{
     width:100%;
-    height:55px;
-    font-size:20px;
-    text-align:right;
-    padding:10px;
-    margin-bottom:10px;
-    border:none;
-    border-radius:8px;
+    height:60px;
     background:#000;
-    color:#00ff00;
-    box-sizing:border-box;
+    color:#00ff66;
+    border:none;
+    border-radius:10px;
+    font-size:22px;
+    padding:10px;
+    text-align:right;
+    margin-bottom:10px;
 }
 
 .calc-buttons{
@@ -116,14 +129,14 @@ h1{
 }
 
 .calc-buttons button{
-    height:50px;
+    height:55px;
     border:none;
-    border-radius:8px;
+    border-radius:10px;
     background:#333;
     color:white;
-    font-size:16px;
+    font-size:18px;
     cursor:pointer;
-    transition:0.2s;
+    transition:.2s;
 }
 
 .calc-buttons button:hover{
@@ -131,23 +144,21 @@ h1{
     transform:scale(1.05);
 }
 
-/* Footer Signature */
 footer{
     position:fixed;
-    bottom:5px;
-    left:50%;
-    transform:translateX(-50%);
+    bottom:8px;
     width:100%;
     text-align:center;
-    font-size:10px;
-    color:rgba(255,255,255,0.75);
+    color:rgba(255,255,255,.7);
+    font-size:11px;
     letter-spacing:1px;
-    pointer-events:none;
+    z-index:1000;
 }
 </style>
 </head>
-
 <body>
+
+<div id="space-bg"></div>
 
 <div class="container">
 
@@ -177,15 +188,13 @@ footer{
 
     </div>
 
-    <!-- Button -->
     <div class="button-container">
         <button class="nav-btn"
-            onclick="window.location.href='https://gadpayat.github.io/Status-Countdown/';">
+        onclick="window.open('YOUR_SP_LINK_HERE','_blank')">
             👉 Click HERE to view the Individual SP Countdown
         </button>
     </div>
 
-    <!-- Scientific Calculator -->
     <div class="calculator">
 
         <input type="text" id="calcDisplay" readonly>
@@ -233,75 +242,281 @@ footer{
 
 </div>
 
+<footer>
+© 2026 Ghilous. All Rights Reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 <script>
-const targetDate = new Date("October 31, 2026 00:00:00").getTime();
+/* COUNTDOWN */
+
+const targetDate =
+new Date("October 31, 2026 00:00:00").getTime();
 
 function updateCountdown(){
 
     const now = new Date().getTime();
     const distance = targetDate - now;
 
-    if(distance <= 0){
-        document.getElementById("countdown").innerHTML =
-        "<h2>🎉 The countdown has ended!</h2>";
-        return;
-    }
+    if(distance < 0) return;
 
-    const days = Math.floor(distance/(1000*60*60*24));
+    document.getElementById("days").innerHTML =
+    Math.floor(distance/(1000*60*60*24));
 
-    const hours = Math.floor(
-        (distance%(1000*60*60*24))
-        /(1000*60*60)
-    );
+    document.getElementById("hours").innerHTML =
+    Math.floor((distance%(1000*60*60*24))/(1000*60*60));
 
-    const minutes = Math.floor(
-        (distance%(1000*60*60))
-        /(1000*60)
-    );
+    document.getElementById("minutes").innerHTML =
+    Math.floor((distance%(1000*60*60))/(1000*60));
 
-    const seconds = Math.floor(
-        (distance%(1000*60))
-        /1000
-    );
-
-    document.getElementById("days").textContent = days;
-    document.getElementById("hours").textContent = hours;
-    document.getElementById("minutes").textContent = minutes;
-    document.getElementById("seconds").textContent = seconds;
+    document.getElementById("seconds").innerHTML =
+    Math.floor((distance%(1000*60))/1000);
 }
 
-updateCountdown();
 setInterval(updateCountdown,1000);
+updateCountdown();
 
-/* Scientific Calculator */
+/* CALCULATOR */
 
-function appendCalc(value){
-    document.getElementById("calcDisplay").value += value;
+function appendCalc(v){
+document.getElementById("calcDisplay").value+=v;
 }
 
 function clearCalc(){
-    document.getElementById("calcDisplay").value = "";
+document.getElementById("calcDisplay").value="";
 }
 
 function backspaceCalc(){
-    let display = document.getElementById("calcDisplay");
-    display.value = display.value.slice(0,-1);
+let d=document.getElementById("calcDisplay");
+d.value=d.value.slice(0,-1);
 }
 
 function calculateResult(){
-    try{
-        let result = eval(document.getElementById("calcDisplay").value);
-        document.getElementById("calcDisplay").value = result;
-    }
-    catch(error){
-        document.getElementById("calcDisplay").value = "Error";
-    }
+try{
+document.getElementById("calcDisplay").value=
+eval(document.getElementById("calcDisplay").value);
+}catch{
+document.getElementById("calcDisplay").value="Error";
 }
-</script>
+}
 
-<footer>
-    © 2026 Ghilous. All Rights Reserved.
-</footer>
+/* THREE.JS SPACE */
+
+const scene=new THREE.Scene();
+
+const camera=new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+1,
+5000
+);
+
+camera.position.z=1000;
+
+const renderer=new THREE.WebGLRenderer({
+antialias:true,
+alpha:true
+});
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+document.getElementById('space-bg')
+.appendChild(renderer.domElement);
+
+/* STARS */
+
+const starsGeometry=new THREE.BufferGeometry();
+const starVertices=[];
+
+for(let i=0;i<10000;i++){
+
+starVertices.push(
+(Math.random()-0.5)*5000,
+(Math.random()-0.5)*5000,
+(Math.random()-0.5)*5000
+);
+
+}
+
+starsGeometry.setAttribute(
+'position',
+new THREE.Float32BufferAttribute(
+starVertices,3
+)
+);
+
+const starsMaterial=
+new THREE.PointsMaterial({
+color:0xffffff,
+size:2
+});
+
+const stars=
+new THREE.Points(
+starsGeometry,
+starsMaterial
+);
+
+scene.add(stars);
+
+/* MOON */
+
+const moon=
+new THREE.Mesh(
+new THREE.SphereGeometry(120,64,64),
+new THREE.MeshPhongMaterial({
+color:0xffffff
+})
+);
+
+moon.position.set(-1200,500,-800);
+scene.add(moon);
+
+/* PLANETS */
+
+const planet1=
+new THREE.Mesh(
+new THREE.SphereGeometry(80,64,64),
+new THREE.MeshPhongMaterial({
+color:0x3366ff
+})
+);
+
+scene.add(planet1);
+
+const planet2=
+new THREE.Mesh(
+new THREE.SphereGeometry(60,64,64),
+new THREE.MeshPhongMaterial({
+color:0xff8844
+})
+);
+
+planet2.position.set(900,-200,-700);
+scene.add(planet2);
+
+/* LIGHTS */
+
+scene.add(
+new THREE.AmbientLight(
+0xffffff,
+0.8
+)
+);
+
+const pointLight=
+new THREE.PointLight(
+0xffffff,
+2
+);
+
+pointLight.position.set(
+100,
+100,
+500
+);
+
+scene.add(pointLight);
+
+/* SHOOTING STARS */
+
+const shootingStars=[];
+
+function createShootingStar(){
+
+const star=
+new THREE.Mesh(
+new THREE.SphereGeometry(3),
+new THREE.MeshBasicMaterial({
+color:0xffffff
+})
+);
+
+star.position.set(
+1500,
+Math.random()*800,
+-300
+);
+
+star.velocity={
+x:-25,
+y:-10
+};
+
+scene.add(star);
+shootingStars.push(star);
+}
+
+setInterval(createShootingStar,3000);
+
+/* ANIMATE */
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+stars.rotation.y+=0.00015;
+
+planet1.position.x=
+700*Math.cos(
+Date.now()*0.00015
+);
+
+planet1.position.z=
+700*Math.sin(
+Date.now()*0.00015
+);
+
+planet1.rotation.y+=0.01;
+planet2.rotation.y+=0.008;
+moon.rotation.y+=0.002;
+
+shootingStars.forEach((s,i)=>{
+
+s.position.x+=s.velocity.x;
+s.position.y+=s.velocity.y;
+
+if(s.position.x<-2000){
+
+scene.remove(s);
+shootingStars.splice(i,1);
+
+}
+
+});
+
+camera.position.x=
+Math.sin(Date.now()*0.0001)*50;
+
+camera.position.y=
+Math.cos(Date.now()*0.0001)*30;
+
+camera.lookAt(scene.position);
+
+renderer.render(scene,camera);
+
+}
+
+animate();
+
+window.addEventListener('resize',()=>{
+
+camera.aspect=
+window.innerWidth/window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+});
+</script>
 
 </body>
 </html>
