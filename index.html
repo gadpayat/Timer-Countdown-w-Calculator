@@ -3,336 +3,167 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sub-Project Completion Countdown for KKB-CDD</title>
-
+<title>KKB-CDD Countdown Dashboard</title>
 <style>
 body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    color:white;
-    overflow:hidden;
-
-    /* Base “time running out” atmosphere */
-    background: radial-gradient(circle at center, #1a0000 0%, #000 70%);
+margin:0;font-family:Arial,sans-serif;color:#fff;overflow-x:hidden;
+background:radial-gradient(circle at center,#1a0000 0%,#000 70%);
 }
-
-/* ===== RUNNING OUT OF TIME BACKGROUND EFFECT ===== */
-
-/* rotating “clock pulse” layer */
-body::before{
-    content:"";
-    position:fixed;
-    top:-50%;
-    left:-50%;
-    width:200%;
-    height:200%;
-    background: conic-gradient(
-        from 0deg,
-        rgba(255,0,0,0.15),
-        rgba(0,0,0,0.8),
-        rgba(255,0,0,0.1),
-        rgba(0,0,0,0.9),
-        rgba(255,0,0,0.2)
-    );
-    animation: spin 6s linear infinite;
-    z-index:-2;
-    opacity:0.8;
-    filter: blur(40px);
+body:before{
+content:"";position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+background:conic-gradient(from 0deg,rgba(255,0,0,.15),rgba(0,0,0,.8),rgba(255,0,0,.1),rgba(0,0,0,.9));
+animation:spin 6s linear infinite;filter:blur(40px);z-index:-2;
 }
-
-/* flickering urgency overlay */
-body::after{
-    content:"";
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:
-        radial-gradient(circle at 50% 50%, rgba(255,0,0,0.15), transparent 60%),
-        repeating-radial-gradient(circle at 50% 50%, rgba(255,0,0,0.05) 0 2px, transparent 2px 6px);
-    animation: pulse 1.5s infinite alternate;
-    z-index:-1;
-    opacity:0.6;
+body:after{
+content:"";position:fixed;inset:0;
+background:radial-gradient(circle,rgba(255,0,0,.15),transparent 60%);
+animation:pulse 1.5s infinite alternate;z-index:-1;
 }
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes pulse{from{opacity:.3}to{opacity:.8}}
 
-/* spinning motion */
-@keyframes spin{
-    from{ transform:rotate(0deg); }
-    to{ transform:rotate(360deg); }
+.container{max-width:1000px;margin:auto;padding:20px;text-align:center}
+#countdown{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.time-box{background:rgba(20,0,0,.85);padding:12px;border-radius:10px;min-width:100px}
+.number{font-size:2rem;font-weight:bold}
+.label{font-size:.8rem;color:#ffaaaa}
+.nav-btn,button{
+background:#b00000;color:#fff;border:none;border-radius:8px;padding:12px;cursor:pointer
 }
-
-/* heartbeat / ticking effect */
-@keyframes pulse{
-    0%{ opacity:0.3; filter:contrast(1); }
-    100%{ opacity:0.7; filter:contrast(1.4); }
+.panel{
+margin-top:25px;background:rgba(20,0,0,.9);
+padding:15px;border-radius:12px;border:1px solid rgba(255,0,0,.25)
 }
-
-/* Top-center container */
-.container{
-    position:fixed;
-    top:15px;
-    left:50%;
-    transform:translateX(-50%);
-    text-align:center;
-    z-index:9999;
-    padding:10px;
+#calcDisplay,#unitInput,#unitResult,select{
+width:100%;height:45px;margin-bottom:10px;box-sizing:border-box;
+background:#000;color:#ff6666;border:none;border-radius:8px;padding:8px;
 }
-
-h1{
-    margin:0 0 10px 0;
-    font-size:1.5rem;
-    text-shadow:0 0 10px rgba(255,0,0,0.4);
-}
-
-#countdown{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:nowrap;
-}
-
-.time-box{
-    background:rgba(20,0,0,0.85);
-    padding:12px;
-    border-radius:10px;
-    min-width:90px;
-    box-shadow:0 0 15px rgba(255,0,0,0.25);
-    border:1px solid rgba(255,0,0,0.2);
-}
-
-.number{
-    font-size:2rem;
-    font-weight:bold;
-    line-height:1;
-}
-
-.label{
-    font-size:0.8rem;
-    margin-top:5px;
-    color:#ffaaaa;
-    text-transform:uppercase;
-}
-
-/* Button below timer */
-.button-container{
-    margin-top:15px;
-}
-
-.nav-btn{
-    background:#b00000;
-    color:white;
-    border:none;
-    padding:12px 24px;
-    font-size:18px;
-    border-radius:8px;
-    cursor:pointer;
-    box-shadow:0 0 15px red;
-    transition:all 0.3s ease;
-}
-
-.nav-btn:hover{
-    background:#ff0000;
-    transform:scale(1.05);
-    box-shadow:0 0 25px red;
-}
-
-/* Scientific Calculator */
-.calculator{
-    margin-top:30px;
-    width:380px;
-    margin-left:auto;
-    margin-right:auto;
-    background:rgba(20,0,0,0.9);
-    padding:15px;
-    border-radius:12px;
-    box-shadow:0 0 20px rgba(255,0,0,0.2);
-    border:1px solid rgba(255,0,0,0.25);
-}
-
-#calcDisplay{
-    width:100%;
-    height:55px;
-    font-size:20px;
-    text-align:right;
-    padding:10px;
-    margin-bottom:10px;
-    border:none;
-    border-radius:8px;
-    background:#000;
-    color:#ff4444;
-    box-sizing:border-box;
-}
-
 .calc-buttons{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
+display:grid;grid-template-columns:repeat(4,1fr);gap:8px
 }
-
-.calc-buttons button{
-    height:50px;
-    border:none;
-    border-radius:8px;
-    background:#2a0000;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    transition:0.2s;
-}
-
-.calc-buttons button:hover{
-    background:#5a0000;
-    transform:scale(1.05);
-}
-
-/* Footer Signature */
-footer{
-    position:fixed;
-    bottom:5px;
-    left:50%;
-    transform:translateX(-50%);
-    width:100%;
-    text-align:center;
-    font-size:10px;
-    color:rgba(255,150,150,0.7);
-    letter-spacing:1px;
-    pointer-events:none;
-}
+.calc-buttons button{height:50px}
+.converter-grid{display:grid;gap:10px}
+footer{text-align:center;padding:20px;font-size:12px;color:#ff9999}
+@media(max-width:600px){.calc-buttons{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
-
 <body>
-
 <div class="container">
+<h1>SP Completion Countdown for KKB‑CDD</h1>
 
-    <h1>SP Completion Countdown for KKB-CDD</h1>
-
-    <div id="countdown">
-
-        <div class="time-box">
-            <div class="number" id="days">0</div>
-            <div class="label">Days</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="hours">0</div>
-            <div class="label">Hours</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="minutes">0</div>
-            <div class="label">Minutes</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="seconds">0</div>
-            <div class="label">Seconds</div>
-        </div>
-
-    </div>
-
-    <div class="button-container">
-        <button class="nav-btn"
-            onclick="window.location.href='https://gadpayat.github.io/Status-Countdown/';">
-            👉 Click HERE to view the Individual SP Countdown
-        </button>
-    </div>
-
-    <div class="calculator">
-
-        <input type="text" id="calcDisplay" readonly>
-
-        <div class="calc-buttons">
-
-            <button onclick="appendCalc('(')">(</button>
-            <button onclick="appendCalc(')')">)</button>
-            <button onclick="appendCalc('**')">xʸ</button>
-            <button onclick="clearCalc()">C</button>
-
-            <button onclick="appendCalc('Math.sin(')">sin</button>
-            <button onclick="appendCalc('Math.cos(')">cos</button>
-            <button onclick="appendCalc('Math.tan(')">tan</button>
-            <button onclick="appendCalc('/')">÷</button>
-
-            <button onclick="appendCalc('Math.log10(')">log</button>
-            <button onclick="appendCalc('Math.log(')">ln</button>
-            <button onclick="appendCalc('Math.sqrt(')">√</button>
-            <button onclick="appendCalc('*')">×</button>
-
-            <button onclick="appendCalc('7')">7</button>
-            <button onclick="appendCalc('8')">8</button>
-            <button onclick="appendCalc('9')">9</button>
-            <button onclick="appendCalc('-')">−</button>
-
-            <button onclick="appendCalc('4')">4</button>
-            <button onclick="appendCalc('5')">5</button>
-            <button onclick="appendCalc('6')">6</button>
-            <button onclick="appendCalc('+')">+</button>
-
-            <button onclick="appendCalc('1')">1</button>
-            <button onclick="appendCalc('2')">2</button>
-            <button onclick="appendCalc('3')">3</button>
-            <button onclick="calculateResult()">=</button>
-
-            <button onclick="appendCalc('0')">0</button>
-            <button onclick="appendCalc('.')">.</button>
-            <button onclick="appendCalc('Math.PI')">π</button>
-            <button onclick="backspaceCalc()">⌫</button>
-
-        </div>
-
-    </div>
-
+<div id="countdown">
+<div class="time-box"><div class="number" id="days">0</div><div class="label">Days</div></div>
+<div class="time-box"><div class="number" id="hours">0</div><div class="label">Hours</div></div>
+<div class="time-box"><div class="number" id="minutes">0</div><div class="label">Minutes</div></div>
+<div class="time-box"><div class="number" id="seconds">0</div><div class="label">Seconds</div></div>
 </div>
 
+<p>
+<button class="nav-btn" onclick="window.open('https://gadpayat.github.io/Status-Countdown/','_blank')">
+View Individual SP Countdown
+</button>
+</p>
+
+<div class="panel">
+<h2>Scientific Calculator</h2>
+<input id="calcDisplay" readonly>
+<div class="calc-buttons">
+<button onclick="add('(')">(</button><button onclick="add(')')">)</button><button onclick="add('**')">xʸ</button><button onclick="clr()">C</button>
+<button onclick="add('Math.sin(')">sin</button><button onclick="add('Math.cos(')">cos</button><button onclick="add('Math.tan(')">tan</button><button onclick="add('/')">÷</button>
+<button onclick="add('Math.log10(')">log</button><button onclick="add('Math.log(')">ln</button><button onclick="add('Math.sqrt(')">√</button><button onclick="add('*')">×</button>
+<button onclick="add('7')">7</button><button onclick="add('8')">8</button><button onclick="add('9')">9</button><button onclick="add('-')">−</button>
+<button onclick="add('4')">4</button><button onclick="add('5')">5</button><button onclick="add('6')">6</button><button onclick="add('+')">+</button>
+<button onclick="add('1')">1</button><button onclick="add('2')">2</button><button onclick="add('3')">3</button><button onclick="eq()">=</button>
+<button onclick="add('0')">0</button><button onclick="add('.')">.</button><button onclick="add('Math.PI')">π</button><button onclick="bk()">⌫</button>
+</div>
+</div>
+
+<div style="height:40px"></div>
+
+<div class="panel">
+<h2>Universal Unit Converter</h2>
+<select id="category" onchange="populateUnits()">
+<option value="length">Length</option>
+<option value="area">Area</option>
+<option value="volume">Volume</option>
+<option value="mass">Mass</option>
+<option value="temperature">Temperature</option>
+<option value="speed">Speed</option>
+<option value="time">Time</option>
+<option value="pressure">Pressure</option>
+<option value="energy">Energy</option>
+<option value="power">Power</option>
+<option value="storage">Storage</option>
+<option value="angle">Angle</option>
+</select>
+<input type="number" id="unitInput" placeholder="Enter value">
+<select id="fromUnit"></select>
+<select id="toUnit"></select>
+<button onclick="convertUnit()">Convert</button>
+<input id="unitResult" readonly placeholder="Result">
+</div>
+</div>
+
+<footer>© 2026 Ghilous. All Rights Reserved.</footer>
+
 <script>
-const targetDate = new Date("October 31, 2026 00:00:00").getTime();
+const targetDate=new Date("October 31, 2026 00:00:00").getTime();
+setInterval(()=>{
+const d=targetDate-Date.now();
+if(d<0)return;
+days.textContent=Math.floor(d/86400000);
+hours.textContent=Math.floor(d%86400000/3600000);
+minutes.textContent=Math.floor(d%3600000/60000);
+seconds.textContent=Math.floor(d%60000/1000);
+},1000);
 
-function updateCountdown(){
-    const now = new Date().getTime();
-    const distance = targetDate - now;
+function add(v){calcDisplay.value+=v}
+function clr(){calcDisplay.value=''}
+function bk(){calcDisplay.value=calcDisplay.value.slice(0,-1)}
+function eq(){try{calcDisplay.value=eval(calcDisplay.value)}catch(e){calcDisplay.value='Error'}}
 
-    if(distance <= 0){
-        document.getElementById("countdown").innerHTML =
-        "<h2>Time has run out.</h2>";
-        return;
-    }
+const unitData={
+length:{mm:.001,cm:.01,m:1,km:1000,in:.0254,ft:.3048,yd:.9144,mi:1609.344,nmi:1852},
+area:{"mm²":.000001,"cm²":.0001,"m²":1,"km²":1000000,"ft²":.092903,acre:4046.856,hectare:10000},
+volume:{mL:.001,L:1,m3:1000,tsp:.00492892,tbsp:.0147868,cup:.236588,pint:.473176,quart:.946353,gallon:3.78541},
+mass:{mg:.000001,g:.001,kg:1,ton:1000,oz:.0283495,lb:.453592,stone:6.35029},
+speed:{"m/s":1,"km/h":.277778,mph:.44704,knot:.514444},
+time:{ms:.001,sec:1,min:60,hr:3600,day:86400,week:604800,month:2629800,year:31557600},
+pressure:{Pa:1,kPa:1000,MPa:1000000,bar:100000,psi:6894.76,atm:101325},
+energy:{J:1,kJ:1000,cal:4.184,kcal:4184,Wh:3600,kWh:3600000},
+power:{W:1,kW:1000,MW:1000000,hp:745.7},
+storage:{bit:.125,byte:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776},
+angle:{degree:1,radian:57.2958},
+temperature:{C:1,F:1,K:1}
+};
 
-    const days = Math.floor(distance/(1000*60*60*24));
-    const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-    const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
-    const seconds = Math.floor((distance%(1000*60))/1000);
-
-    document.getElementById("days").textContent = days;
-    document.getElementById("hours").textContent = hours;
-    document.getElementById("minutes").textContent = minutes;
-    document.getElementById("seconds").textContent = seconds;
+function populateUnits(){
+let c=category.value;
+fromUnit.innerHTML=''; toUnit.innerHTML='';
+Object.keys(unitData[c]).forEach(u=>{
+fromUnit.add(new Option(u,u));
+toUnit.add(new Option(u,u));
+});
 }
+function convertUnit(){
+let c=category.value,v=parseFloat(unitInput.value);
+if(isNaN(v)) return unitResult.value='Enter a number';
+let f=fromUnit.value,t=toUnit.value;
 
-updateCountdown();
-setInterval(updateCountdown,1000);
-
-/* Calculator */
-function appendCalc(v){ document.getElementById("calcDisplay").value += v; }
-function clearCalc(){ document.getElementById("calcDisplay").value = ""; }
-function backspaceCalc(){
-    let d=document.getElementById("calcDisplay");
-    d.value=d.value.slice(0,-1);
+if(c==='temperature'){
+let r=v;
+if(f==='C'&&t==='F')r=v*9/5+32;
+else if(f==='F'&&t==='C')r=(v-32)*5/9;
+else if(f==='C'&&t==='K')r=v+273.15;
+else if(f==='K'&&t==='C')r=v-273.15;
+else if(f==='F'&&t==='K')r=(v-32)*5/9+273.15;
+else if(f==='K'&&t==='F')r=(v-273.15)*9/5+32;
+unitResult.value=r; return;
 }
-function calculateResult(){
-    try{
-        document.getElementById("calcDisplay").value =
-        eval(document.getElementById("calcDisplay").value);
-    }catch(e){
-        document.getElementById("calcDisplay").value="Error";
-    }
+const base=v*unitData[c][f];
+unitResult.value=(base/unitData[c][t]).toLocaleString(undefined,{maximumFractionDigits:10});
 }
+populateUnits();
 </script>
-
-<footer>
-    © 2026 Ghilous. All Rights Reserved.
-</footer>
-
 </body>
 </html>
