@@ -8,12 +8,22 @@
 <style>
 body{
     margin:0;
-    background:#111;
-    color:white;
+    overflow:hidden;
     font-family:Arial, sans-serif;
+    color:white;
 }
 
-/* Top-center container */
+/* 3D Background Canvas */
+#bg{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+/* UI Container */
 .container{
     position:fixed;
     top:15px;
@@ -30,36 +40,33 @@ h1{
     text-shadow:0 0 10px rgba(255,255,255,0.4);
 }
 
+/* Countdown */
 #countdown{
     display:flex;
     justify-content:center;
     gap:10px;
-    flex-wrap:nowrap;
 }
 
 .time-box{
-    background:rgba(34,34,34,0.9);
+    background:rgba(34,34,34,0.6);
     padding:12px;
     border-radius:10px;
     min-width:90px;
-    box-shadow:0 0 10px rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.2);
 }
 
 .number{
     font-size:2rem;
     font-weight:bold;
-    line-height:1;
 }
 
 .label{
     font-size:0.8rem;
-    margin-top:5px;
     color:#ccc;
     text-transform:uppercase;
 }
 
-/* Button below timer */
+/* Button */
 .button-container{
     margin-top:15px;
 }
@@ -73,26 +80,18 @@ h1{
     border-radius:8px;
     cursor:pointer;
     box-shadow:0 0 10px red;
-    transition:all 0.3s ease;
 }
 
-.nav-btn:hover{
-    background:#cc0000;
-    transform:scale(1.05);
-    box-shadow:0 0 20px red;
-}
-
-/* Scientific Calculator */
+/* Calculator */
 .calculator{
-    margin-top:30px; /* Double-spaced below button */
+    margin-top:30px;
     width:380px;
     margin-left:auto;
     margin-right:auto;
-    background:rgba(34,34,34,0.95);
+    background:rgba(0,0,0,0.6);
     padding:15px;
     border-radius:12px;
-    box-shadow:0 0 15px rgba(255,255,255,0.15);
-    border:1px solid rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.2);
 }
 
 #calcDisplay{
@@ -100,13 +99,10 @@ h1{
     height:55px;
     font-size:20px;
     text-align:right;
-    padding:10px;
-    margin-bottom:10px;
-    border:none;
-    border-radius:8px;
-    background:#000;
+    background:black;
     color:#00ff00;
-    box-sizing:border-box;
+    border:none;
+    margin-bottom:10px;
 }
 
 .calc-buttons{
@@ -117,81 +113,52 @@ h1{
 
 .calc-buttons button{
     height:50px;
-    border:none;
-    border-radius:8px;
-    background:#333;
+    background:#222;
     color:white;
-    font-size:16px;
+    border:none;
+    border-radius:6px;
     cursor:pointer;
-    transition:0.2s;
 }
 
-.calc-buttons button:hover{
-    background:#555;
-    transform:scale(1.05);
-}
-
-/* Footer Signature */
+/* Footer */
 footer{
     position:fixed;
     bottom:5px;
-    left:50%;
-    transform:translateX(-50%);
     width:100%;
     text-align:center;
     font-size:10px;
-    color:rgba(255,255,255,0.75);
-    letter-spacing:1px;
-    pointer-events:none;
+    color:white;
 }
 </style>
 </head>
 
 <body>
 
+<canvas id="bg"></canvas>
+
 <div class="container">
 
     <h1>Sub-Project Completion Countdown for KKB-CDD</h1>
 
     <div id="countdown">
-
-        <div class="time-box">
-            <div class="number" id="days">0</div>
-            <div class="label">Days</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="hours">0</div>
-            <div class="label">Hours</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="minutes">0</div>
-            <div class="label">Minutes</div>
-        </div>
-
-        <div class="time-box">
-            <div class="number" id="seconds">0</div>
-            <div class="label">Seconds</div>
-        </div>
-
+        <div class="time-box"><div class="number" id="days">0</div><div class="label">Days</div></div>
+        <div class="time-box"><div class="number" id="hours">0</div><div class="label">Hours</div></div>
+        <div class="time-box"><div class="number" id="minutes">0</div><div class="label">Minutes</div></div>
+        <div class="time-box"><div class="number" id="seconds">0</div><div class="label">Seconds</div></div>
     </div>
 
-    <!-- Button -->
     <div class="button-container">
         <button class="nav-btn"
             onclick="window.location.href='https://gadpayat.github.io/Status-Countdown/';">
-            👉 Click HERE to view the Individual SP Countdown
+            👉 Click HERE to view Individual SP Countdown
         </button>
     </div>
 
-    <!-- Scientific Calculator -->
     <div class="calculator">
 
         <input type="text" id="calcDisplay" readonly>
 
         <div class="calc-buttons">
-
             <button onclick="appendCalc('(')">(</button>
             <button onclick="appendCalc(')')">)</button>
             <button onclick="appendCalc('**')">xʸ</button>
@@ -202,106 +169,145 @@ footer{
             <button onclick="appendCalc('Math.tan(')">tan</button>
             <button onclick="appendCalc('/')">÷</button>
 
-            <button onclick="appendCalc('Math.log10(')">log</button>
-            <button onclick="appendCalc('Math.log(')">ln</button>
-            <button onclick="appendCalc('Math.sqrt(')">√</button>
-            <button onclick="appendCalc('*')">×</button>
-
             <button onclick="appendCalc('7')">7</button>
             <button onclick="appendCalc('8')">8</button>
             <button onclick="appendCalc('9')">9</button>
-            <button onclick="appendCalc('-')">−</button>
+            <button onclick="appendCalc('*')">×</button>
 
             <button onclick="appendCalc('4')">4</button>
             <button onclick="appendCalc('5')">5</button>
             <button onclick="appendCalc('6')">6</button>
-            <button onclick="appendCalc('+')">+</button>
+            <button onclick="appendCalc('-')">−</button>
 
             <button onclick="appendCalc('1')">1</button>
             <button onclick="appendCalc('2')">2</button>
             <button onclick="appendCalc('3')">3</button>
-            <button onclick="calculateResult()">=</button>
+            <button onclick="appendCalc('+')">+</button>
 
             <button onclick="appendCalc('0')">0</button>
             <button onclick="appendCalc('.')">.</button>
             <button onclick="appendCalc('Math.PI')">π</button>
-            <button onclick="backspaceCalc()">⌫</button>
-
+            <button onclick="calculateResult()">=</button>
         </div>
 
     </div>
 
 </div>
 
+<footer>© 2026 Ghilous. All Rights Reserved.</footer>
+
+<!-- THREE.JS -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 <script>
+// ===== COUNTDOWN =====
 const targetDate = new Date("October 31, 2026 00:00:00").getTime();
 
 function updateCountdown(){
+    const now = Date.now();
+    const diff = targetDate - now;
 
-    const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    if(distance <= 0){
-        document.getElementById("countdown").innerHTML =
-        "<h2>🎉 The countdown has ended!</h2>";
+    if(diff <= 0){
+        document.getElementById("countdown").innerHTML = "<h2>Completed</h2>";
         return;
     }
 
-    const days = Math.floor(distance/(1000*60*60*24));
-
-    const hours = Math.floor(
-        (distance%(1000*60*60*24))
-        /(1000*60*60)
-    );
-
-    const minutes = Math.floor(
-        (distance%(1000*60*60))
-        /(1000*60)
-    );
-
-    const seconds = Math.floor(
-        (distance%(1000*60))
-        /1000
-    );
-
-    document.getElementById("days").textContent = days;
-    document.getElementById("hours").textContent = hours;
-    document.getElementById("minutes").textContent = minutes;
-    document.getElementById("seconds").textContent = seconds;
+    document.getElementById("days").textContent = Math.floor(diff/86400000);
+    document.getElementById("hours").textContent = Math.floor((diff%86400000)/3600000);
+    document.getElementById("minutes").textContent = Math.floor((diff%3600000)/60000);
+    document.getElementById("seconds").textContent = Math.floor((diff%60000)/1000);
 }
-
-updateCountdown();
 setInterval(updateCountdown,1000);
+updateCountdown();
 
-/* Scientific Calculator */
-
-function appendCalc(value){
-    document.getElementById("calcDisplay").value += value;
-}
-
-function clearCalc(){
-    document.getElementById("calcDisplay").value = "";
-}
-
-function backspaceCalc(){
-    let display = document.getElementById("calcDisplay");
-    display.value = display.value.slice(0,-1);
-}
-
+// ===== CALCULATOR =====
+function appendCalc(v){document.getElementById("calcDisplay").value+=v;}
+function clearCalc(){document.getElementById("calcDisplay").value="";}
 function calculateResult(){
     try{
-        let result = eval(document.getElementById("calcDisplay").value);
-        document.getElementById("calcDisplay").value = result;
-    }
-    catch(error){
-        document.getElementById("calcDisplay").value = "Error";
+        document.getElementById("calcDisplay").value =
+        eval(document.getElementById("calcDisplay").value);
+    }catch(e){
+        document.getElementById("calcDisplay").value="Error";
     }
 }
-</script>
 
-<footer>
-    © 2026 Ghilous. All Rights Reserved.
-</footer>
+// ===== 3D EARTH BACKGROUND =====
+const canvas = document.getElementById("bg");
+const renderer = new THREE.WebGLRenderer({canvas, alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth/window.innerHeight,
+    0.1,
+    1000
+);
+camera.position.z = 3;
+
+scene.add(camera);
+
+// Earth
+const geometry = new THREE.SphereGeometry(1,64,64);
+
+const texture = new THREE.TextureLoader().load(
+"https://threejs.org/examples/textures/land_ocean_ice_lights_2048.jpg"
+);
+
+const material = new THREE.MeshStandardMaterial({
+    map: texture
+});
+
+const earth = new THREE.Mesh(geometry, material);
+scene.add(earth);
+
+// Lights
+const light = new THREE.PointLight(0xffffff, 2);
+light.position.set(5,3,5);
+scene.add(light);
+
+scene.add(new THREE.AmbientLight(0x222222));
+
+// Stars
+function addStars(){
+    const starGeo = new THREE.BufferGeometry();
+    const starCount = 6000;
+    const pos = [];
+
+    for(let i=0;i<starCount;i++){
+        pos.push((Math.random()-0.5)*200);
+        pos.push((Math.random()-0.5)*200);
+        pos.push((Math.random()-0.5)*200);
+    }
+
+    starGeo.setAttribute('position', new THREE.Float32BufferAttribute(pos,3));
+
+    const starMat = new THREE.PointsMaterial({color:0xffffff, size:0.7});
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+}
+addStars();
+
+// Animation
+function animate(){
+    requestAnimationFrame(animate);
+
+    earth.rotation.y += 0.0015;
+
+    camera.position.z += 0.0005; // slow zoom-out cinematic feel
+
+    renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener("resize", ()=>{
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+});
+</script>
 
 </body>
 </html>
